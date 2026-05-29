@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>🤖 AI Code Assistant</h1>
+            </div>
+            <div class="header-right">
+                <button id="settingsBtn" class="btn btn-secondary">⚙️ Settings</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>📁 File Explorer</h3>
+                    <div class="file-actions">
+                        <button id="newFileBtn" class="btn btn-primary">New File</button>
+                        <button id="openFileBtn" class="btn btn-primary">Open File</button>
+                    </div>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>🎯 AI Features</h3>
+                    <div class="ai-actions">
+                        <button id="codeCompletionBtn" class="btn btn-ai">✨ Code Completion</button>
+                        <button id="bugDetectionBtn" class="btn btn-ai">🐛 Bug Detection</button>
+                        <button id="generateDocsBtn" class="btn btn-ai">📚 Generate Docs</button>
+                        <button id="explainCodeBtn" class="btn btn-ai">💡 Explain Code</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Editor Area -->
+            <main class="editor-container">
+                <div class="editor-header">
+                    <div class="tab-container">
+                        <div id="currentFileTab" class="tab active">
+                            <span class="tab-name">untitled.js</span>
+                            <button class="tab-close">×</button>
+                        </div>
+                    </div>
+                    <div class="editor-actions">
+                        <button id="saveBtn" class="btn btn-success">💾 Save</button>
+                        <select id="languageSelect" class="language-select">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="typescript">TypeScript</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="editor" class="editor"></div>
+            </main>
+
+            <!-- Right Panel -->
+            <aside class="right-panel">
+                <div class="panel-tabs">
+                    <button class="panel-tab active" data-panel="ai-output">AI Output</button>
+                    <button class="panel-tab" data-panel="console">Console</button>
+                    <button class="panel-tab" data-panel="problems">Problems</button>
+                </div>
+
+                <div id="ai-output" class="panel-content active">
+                    <div class="panel-header">
+                        <h4>🤖 AI Assistant</h4>
+                        <button id="clearAiOutput" class="btn btn-sm">Clear</button>
+                    </div>
+                    <div id="aiOutputContent" class="output-content">
+                        <div class="welcome-message">
+                            <p>Welcome to AI Code Assistant! 🚀</p>
+                            <p>Select some code and use the AI features to get started.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="console" class="panel-content">
+                    <div class="panel-header">
+                        <h4>📟 Console</h4>
+                        <button id="clearConsole" class="btn btn-sm">Clear</button>
+                    </div>
+                    <div id="consoleContent" class="output-content"></div>
+                </div>
+
+                <div id="problems" class="panel-content">
+                    <div class="panel-header">
+                        <h4>⚠️ Problems</h4>
+                        <button id="clearProblems" class="btn btn-sm">Clear</button>
+                    </div>
+                    <div id="problemsContent" class="output-content"></div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span id="fileStatus">Ready</span>
+                <span id="aiStatus" class="ai-status">🤖 AI Ready</span>
+            </div>
+            <div class="status-right">
+                <span id="cursorPosition">Ln 1, Col 1</span>
+                <span id="fileSize">0 chars</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="providerSelect">LLM Provider:</label>
+                    <select id="providerSelect">
+                        <option value="openai">OpenAI (Cloud)</option>
+                        <option value="ollama">Ollama (Local)</option>
+                        <option value="lmstudio">LM Studio (Local)</option>
+                        <option value="generic">Generic OpenAI-Compatible</option>
+                    </select>
+                    <small>Choose your preferred AI provider. Local options require the respective software to be running.</small>
+                </div>
+                
+                <div id="openaiSettings" class="provider-settings">
+                    <div class="setting-group">
+                        <label for="apiKeyInput">OpenAI API Key:</label>
+                        <input type="password" id="apiKeyInput" placeholder="Enter your OpenAI API key">
+                        <small>Your API key is stored locally and never sent to our servers.</small>
+                    </div>
+                </div>
+                
+                <div id="ollamaSettings" class="provider-settings" style="display: none;">
+                    <div class="setting-group">
+                        <label for="ollamaUrlInput">Ollama URL:</label>
+                        <input type="text" id="ollamaUrlInput" placeholder="http://localhost:11434" value="http://localhost:11434">
+                        <small>Default Ollama endpoint. Change if running on a different host/port.</small>
+                    </div>
+                </div>
+                
+                <div id="lmstudioSettings" class="provider-settings" style="display: none;">
+                    <div class="setting-group">
+                        <label for="lmstudioUrlInput">LM Studio URL:</label>
+                        <input type="text" id="lmstudioUrlInput" placeholder="http://localhost:1234" value="http://localhost:1234">
+                        <small>Default LM Studio endpoint. Change if running on a different host/port.</small>
+                    </div>
+                </div>
+                
+                <div id="genericSettings" class="provider-settings" style="display: none;">
+                    <div class="setting-group">
+                        <label for="genericUrlInput">API Base URL:</label>
+                        <input type="text" id="genericUrlInput" placeholder="https://api.example.com/v1">
+                        <small>Base URL for OpenAI-compatible API endpoint.</small>
+                    </div>
+                    <div class="setting-group">
+                        <label for="genericKeyInput">API Key (if required):</label>
+                        <input type="password" id="genericKeyInput" placeholder="Optional API key">
+                        <small>Some endpoints require an API key for authentication.</small>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="modelInput">Model Name:</label>
+                    <input type="text" id="modelInput" placeholder="gpt-3.5-turbo">
+                    <small>Model name to use. For local providers, ensure the model is available.</small>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <button id="testConnectionBtn" class="btn btn-secondary">🔗 Test Connection</button>
+                    <div id="connectionStatus" class="connection-status"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettings" class="btn btn-primary">Save</button>
+                <button id="cancelSettings" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

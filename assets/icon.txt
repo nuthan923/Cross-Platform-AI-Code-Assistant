@@ -1,0 +1,22 @@
+# Icon Placeholder
+
+This file serves as a placeholder for the application icon.
+
+For a production application, you would want to create:
+- icon.png (for Linux)
+- icon.ico (for Windows)
+- icon.icns (for macOS)
+
+You can use online converters or tools like:
+- https://convertio.co/
+- https://iconverticons.com/
+- Adobe Illustrator or similar design tools
+
+Recommended icon sizes:
+- 16x16, 32x32, 48x48, 64x64, 128x128, 256x256, 512x512
+
+Icon should represent:
+- AI/Robot theme
+- Code/Programming elements
+- Modern, clean design
+
